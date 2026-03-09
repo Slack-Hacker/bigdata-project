@@ -1,0 +1,8 @@
+node_modules
+*.log
+spark-checkpoints
+kafka-logs
+tmp
+target
+.idea
+.vscode

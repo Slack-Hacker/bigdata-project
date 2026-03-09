@@ -1,0 +1,52 @@
+k<!DOCTYPE html>
+<html>
+<head>
+<title>Real Time Website Analytics</title>
+</head>
+
+<body>
+
+<h2>Live Website Traffic</h2>
+
+<table border="1">
+<thead>
+<tr>
+<th>Page</th>
+<th>Visits</th>
+</tr>
+</thead>
+
+<tbody id="table"></tbody>
+
+</table>
+
+<script>
+
+async function loadStats(){
+
+let res = await fetch("http://master:5000/stats")
+let data = await res.json()
+
+let table = document.getElementById("table")
+
+table.innerHTML=""
+
+for(let page in data){
+
+table.innerHTML += `
+<tr>
+<td>${page}</td>
+<td>${data[page]}</td>
+</tr>
+`
+
+}
+
+}
+
+setInterval(loadStats,2000)
+
+</script>
+
+</body>
+</html>
