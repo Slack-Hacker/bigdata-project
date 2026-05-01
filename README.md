@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Big Data Website Traffic Monitoring
 
 Real-time website traffic pipeline:
@@ -89,28 +88,3 @@ Open **http://master:5000** (or your master IP) for the real-time analytics dash
 - Bar chart: page traffic distribution
 - Doughnut chart: action breakdown
 - Live log table: last 20 events, auto-refreshes every 3 s
-=======
-# Website Traffic Monitoring System
-
-Real-time website analytics using:
-
-Kafka + Spark Streaming + HBase + Node.js
-
-## Start Cluster
-
-start_cluster.sh
-
-## Start Spark Streaming
-
-start_streaming.sh
-
-## Start Website
-
-cd website
-node server.js
-
-## View Data
-
-hbase shell
-scan 'web_traffic'
->>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3
