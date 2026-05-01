@@ -1,50 +1,128 @@
-k<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-<title>Real Time Website Analytics</title>
+  <title>Real-Time Website Analytics</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+
+    h2 { color: #00d9a0; }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th { background: #222; }
+
+    .card {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px;
+      background: #1a1d27;
+      border-radius: 8px;
+      min-width: 150px;
+    }
+
+    .value {
+      font-size: 22px;
+      font-weight: bold;
+      color: #6c63ff;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>Live Website Traffic</h2>
+<h2>📊 Live Website Analytics</h2>
 
-<table border="1">
-<thead>
-<tr>
-<th>Page</th>
-<th>Visits</th>
-</tr>
-</thead>
+<!-- KPI -->
+<div>
+  <div class="card">
+    Total Visits<br>
+    <span class="value" id="total">0</span>
+  </div>
 
-<tbody id="table"></tbody>
+  <div class="card">
+    Pages<br>
+    <span class="value" id="pagesCount">0</span>
+  </div>
 
+  <div class="card">
+    Actions<br>
+    <span class="value" id="actionsCount">0</span>
+  </div>
+
+  <div class="card">
+    Users<br>
+    <span class="value" id="usersCount">0</span>
+  </div>
+</div>
+
+<!-- TABLE -->
+<h3>Page Visits</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Page</th>
+      <th>Visits</th>
+    </tr>
+  </thead>
+  <tbody id="table"></tbody>
 </table>
 
 <script>
 
-async function loadStats(){
+async function loadStats() {
+  try {
+    const res = await fetch("/stats");   // IMPORTANT: relative path
+    const data = await res.json();
 
-let res = await fetch("http://master:5000/stats")
-let data = await res.json()
+    // KPI
+    document.getElementById("total").innerText =
+      data.total_visits || 0;
 
-let table = document.getElementById("table")
+    document.getElementById("pagesCount").innerText =
+      Object.keys(data.pages || {}).length;
 
-table.innerHTML=""
+    document.getElementById("actionsCount").innerText =
+      Object.keys(data.actions || {}).length;
 
-for(let page in data){
+    document.getElementById("usersCount").innerText =
+      Object.keys(data.users || {}).length;
 
-table.innerHTML += `
-<tr>
-<td>${page}</td>
-<td>${data[page]}</td>
-</tr>
-`
+    // Table
+    let table = document.getElementById("table");
+    table.innerHTML = "";
 
+    for (let page in data.pages) {
+      table.innerHTML += `
+        <tr>
+          <td>${page}</td>
+          <td>${data.pages[page]}</td>
+        </tr>
+      `;
+    }
+
+  } catch (err) {
+    console.log("Error:", err);
+  }
 }
 
-}
-
-setInterval(loadStats,2000)
+loadStats();
+setInterval(loadStats, 3000);
 
 </script>
 

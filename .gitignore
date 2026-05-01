@@ -1,5 +1,17 @@
+# Node
 node_modules/
+
+# Logs
 logs/
 *.log
+
+# Temp files
 *.swp
 __pycache__/
+
+# Env
+.env
+
+# Big data
+data/
+*.jar

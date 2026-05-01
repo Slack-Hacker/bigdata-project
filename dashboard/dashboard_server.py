@@ -1,152 +1,121 @@
-<<<<<<< HEAD
 from flask import Flask, jsonify, render_template, request
-=======
-from flask import Flask, jsonify
->>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3
 from flask_cors import CORS
 import happybase
 
 app = Flask(__name__)
 CORS(app)
 
-<<<<<<< HEAD
-# In-memory cache so the dashboard stays snappy even if HBase is slow
-_cache = {}
+# In-memory cache for faster dashboard updates
+_cache = {
+    "total_visits": 0,
+    "pages": {},
+    "actions": {},
+    "users": {},
+    "logs": []
+}
 
-# ─────────────────────────────────────────
-# Helper
-# ─────────────────────────────────────────
+# ----------------------------------------
+# Read from HBase
+# ----------------------------------------
 def read_hbase():
-    """Scan web_traffic table and return aggregated metrics."""
     connection = happybase.Connection("master", port=9090)
     table = connection.table("web_traffic")
 
-    logs          = []
-    page_counts   = {}
+    logs = []
+    page_counts = {}
     action_counts = {}
-    user_counts   = {}
-    total_visits  = 0
+    user_counts = {}
+    total_visits = 0
 
     for key, value in table.scan():
-        page       = key.decode()
-        ip         = value.get(b"cf:ip",         b"").decode()
+        page = key.decode()
+
+        ip = value.get(b"cf:ip", b"").decode()
         user_agent = value.get(b"cf:user_agent", b"").decode()
-        action     = value.get(b"cf:action",     b"").decode()
-        timestamp  = value.get(b"cf:timestamp",  b"").decode()
-        cnt        = int(value.get(b"cf:count",  b"0").decode())
+        action = value.get(b"cf:action", b"visit").decode()
+        timestamp = value.get(b"cf:timestamp", b"").decode()
+        cnt = int(value.get(b"cf:count", b"0").decode())
 
         logs.append({
-            "page":       page,
-            "ip":         ip,
+            "page": page,
+            "ip": ip,
             "user_agent": user_agent,
-            "action":     action,
-            "timestamp":  timestamp,
-            "count":      cnt,
+            "action": action,
+            "timestamp": timestamp,
+            "count": cnt,
         })
 
-        total_visits           += cnt
-        page_counts[page]       = cnt
-        action_counts[action]   = action_counts.get(action, 0) + cnt
+        total_visits += cnt
+        page_counts[page] = cnt
+        action_counts[action] = action_counts.get(action, 0) + cnt
         user_counts[user_agent] = user_counts.get(user_agent, 0) + cnt
 
     connection.close()
 
     return {
         "total_visits": total_visits,
-        "pages":        page_counts,
-        "actions":      action_counts,
-        "users":        user_counts,
-        "logs":         logs[-20:],
+        "pages": page_counts,
+        "actions": action_counts,
+        "users": user_counts,
+        "logs": logs[-20:],  # last 20 logs
     }
 
-
-# ─────────────────────────────────────────
+# ----------------------------------------
 # Routes
-# ─────────────────────────────────────────
+# ----------------------------------------
+
 @app.route("/")
 def home():
     return render_template("dashboard.html")
 
-
 @app.route("/stats")
 def stats():
-    """Full stats read from HBase."""
     try:
         data = read_hbase()
-        _cache.update(data)          # keep cache warm
-        return jsonify(data)
+        _cache.update(data)
+        return jsonify(data)   # IMPORTANT: full data
     except Exception as e:
-        # Fall back to cached data if HBase is temporarily unreachable
-        if _cache:
-            return jsonify(_cache)
-        return jsonify({"error": str(e)}), 500
+        print("[HBase ERROR]", e)
 
+        # fallback to cache
+        return jsonify(_cache)
 
 @app.route("/update", methods=["POST"])
 def update():
-    """
-    Called by Spark after each micro-batch.
-    Merges the incoming list of page records into the cache
-    so the dashboard can refresh without hitting HBase every time.
-    """
     records = request.get_json(silent=True) or []
 
     for rec in records:
-        page = rec.get("page", "")
+        page = rec.get("page")
         if not page:
             continue
 
         cnt = rec.get("count", 0)
+        action = rec.get("action", "visit")
+        user = rec.get("user_agent", "unknown")
 
-        # Update pages dict
+        # update pages
         _cache.setdefault("pages", {})[page] = cnt
 
-        # Update action counts
-        action = rec.get("action", "visit")
-        _cache.setdefault("actions", {})[action] = (
+        # update actions
+        _cache.setdefault("actions", {})[action] = \
             _cache["actions"].get(action, 0) + cnt
-        )
 
-        # Update total
+        # update users
+        _cache.setdefault("users", {})[user] = \
+            _cache["users"].get(user, 0) + cnt
+
+        # update total
         _cache["total_visits"] = sum(_cache["pages"].values())
 
-        # Append to logs (keep last 20)
+        # update logs
         logs = _cache.setdefault("logs", [])
         logs.append(rec)
         _cache["logs"] = logs[-20:]
 
     return jsonify({"status": "ok"})
 
-
-# ─────────────────────────────────────────
-# Entry point
-# ─────────────────────────────────────────
+# ----------------------------------------
+# Start server
+# ----------------------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
-=======
-@app.route("/stats")
-def stats():
-
-    connection = happybase.Connection('master', port=9090)
-    table = connection.table('web_traffic')
-
-    result = {}
-
-    for key, value in table.scan():
-        page = key.decode()
-
-        if b'cf:count' in value:
-            result[page] = int(value[b'cf:count'].decode())
-
-    connection.close()
-
-    return jsonify(result)
-
-# Spark can still call this but we ignore it
-@app.route("/update", methods=["POST"])
-def update():
-    return {"status": "ok"}
-
-app.run(host="0.0.0.0", port=5000)
-
->>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3
