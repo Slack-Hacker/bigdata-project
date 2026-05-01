@@ -1,4 +1,5 @@
 #!/bin/bash
+<<<<<<< HEAD
 # ─────────────────────────────────────────────────────────
 # kafka.sh — Start / Restart Kafka safely
 # Usage:
@@ -47,9 +48,46 @@ if jps | grep -q Kafka; then
 else
     echo "   ❌ Kafka failed — check logs:"
     echo "   $KAFKA_DIR/logs/"
+=======
+
+echo "====================================="
+echo "🚀 STARTING KAFKA"
+echo "====================================="
+
+echo ""
+echo "1️⃣ Stopping any existing Kafka process..."
+
+pkill -f kafka.Kafka
+sleep 3
+
+echo ""
+echo "2️⃣ Cleaning old Kafka logs..."
+
+rm -rf ~/kafka-zk/kafka-logs
+
+sleep 2
+
+echo ""
+echo "3️⃣ Starting Kafka..."
+
+~/kafka-zk/bin/kafka-server-start.sh -daemon ~/kafka-zk/config/server.properties
+
+sleep 8
+
+echo ""
+echo "4️⃣ Checking Kafka status..."
+
+if jps | grep -q Kafka; then
+    echo "✅ Kafka started successfully"
+else
+    echo "❌ Kafka failed to start"
+>>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3
 fi
 
 echo ""
 echo "====================================="
+<<<<<<< HEAD
 echo "📨 Broker: master:9092"
 echo "====================================="
+=======
+>>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3

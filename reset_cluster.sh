@@ -1,4 +1,5 @@
 #!/bin/bash
+<<<<<<< HEAD
 # ─────────────────────────────────────────────────────────
 # reset_cluster.sh  —  FULL RESET (cluster + data)
 # Run AFTER stop_cluster.sh (or will stop everything here)
@@ -65,3 +66,25 @@ echo ""
 echo "====================================="
 echo "✅ FULL RESET COMPLETE"
 echo "====================================="
+=======
+
+echo "Stopping services..."
+
+stop-hbase.sh
+stop-yarn.sh
+stop-dfs.sh
+
+pkill -f kafka
+pkill -f zookeeper
+pkill -f SparkSubmit
+
+echo "Cleaning temp files..."
+
+rm -rf /tmp/zookeeper
+rm -rf ~/kafka-zk/kafka-logs/*
+rm -rf ~/spark-checkpoints
+
+mkdir -p ~/kafka-zk/kafka-logs
+
+echo "Reset complete."
+>>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3

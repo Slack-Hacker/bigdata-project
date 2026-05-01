@@ -1,0 +1,5 @@
+node_modules/
+logs/
+*.log
+*.swp
+__pycache__/

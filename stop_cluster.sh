@@ -1,4 +1,5 @@
 #!/bin/bash
+<<<<<<< HEAD
 # ─────────────────────────────────────────────────────────
 # stop_cluster.sh  —  Gracefully stop all services
 # ─────────────────────────────────────────────────────────
@@ -59,3 +60,29 @@ echo ""
 echo "====================================="
 echo "✅ CLUSTER STOPPED CLEANLY"
 echo "====================================="
+=======
+
+echo "Stopping Spark..."
+yarn application -kill $(yarn application -list | grep Spark | awk '{print $1}')
+
+echo "Stopping HBase..."
+stop-hbase.sh
+
+echo "Stopping Kafka..."
+pkill -f kafka
+
+echo "Stopping ZooKeeper..."
+pkill -f zookeeper
+
+echo "Stopping YARN..."
+stop-yarn.sh
+
+echo "Stopping HDFS..."
+stop-dfs.sh
+
+echo "clearing website server"
+pkill -f server.js
+
+
+echo "Cluster stopped."
+>>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3

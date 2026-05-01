@@ -1,4 +1,5 @@
 #!/bin/bash
+<<<<<<< HEAD
 # ─────────────────────────────────────────────────────────
 # health_check.sh  —  Full system health overview
 # ─────────────────────────────────────────────────────────
@@ -76,3 +77,23 @@ echo ""
 echo "========================================"
 echo "✅ HEALTH CHECK COMPLETE"
 echo "========================================"
+=======
+
+echo "===== JVM SERVICES ====="
+jps
+
+echo ""
+echo "===== YARN NODES ====="
+yarn node -list
+
+echo ""
+echo "===== KAFKA TOPICS ====="
+~/kafka-zk/bin/kafka-topics.sh \
+--list \
+--bootstrap-server localhost:9092
+
+echo ""
+echo "===== HBASE TABLES ====="
+
+echo "list" | hbase shell -n
+>>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3
