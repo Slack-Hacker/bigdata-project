@@ -1,8 +1,7 @@
 #!/bin/bash
-<<<<<<< HEAD
 # ─────────────────────────────────────────────────────────
-# reset_cluster.sh  —  FULL RESET (cluster + data)
-# Run AFTER stop_cluster.sh (or will stop everything here)
+# reset_cluster.sh — FULL RESET (cluster + data)
+# Stops everything and wipes data safely
 # ─────────────────────────────────────────────────────────
 
 echo "====================================="
@@ -11,7 +10,7 @@ echo "====================================="
 
 # ── 1. Stop all services ────────────────────────────────
 echo ""
-echo "1️⃣  Stopping all services…"
+echo "1️⃣ Stopping all services..."
 
 cd ~/spark 2>/dev/null || true
 sbin/stop-all.sh 2>/dev/null || true
@@ -31,60 +30,39 @@ sleep 5
 
 # ── 2. Clean ZooKeeper ──────────────────────────────────
 echo ""
-echo "2️⃣  Cleaning ZooKeeper data…"
+echo "2️⃣ Cleaning ZooKeeper data..."
 
-rm -rf /home/ankit/zookeeper-data
+rm -rf ~/zookeeper-data
 rm -rf /tmp/zookeeper
 
 # ── 3. Clean Kafka ──────────────────────────────────────
 echo ""
-echo "3️⃣  Cleaning Kafka logs…"
+echo "3️⃣ Cleaning Kafka logs..."
 
 rm -rf ~/kafka-zk/kafka-logs
 mkdir -p ~/kafka-zk/kafka-logs
 
 # ── 4. Clean Spark ──────────────────────────────────────
 echo ""
-echo "4️⃣  Cleaning Spark temp + checkpoints…"
+echo "4️⃣ Cleaning Spark temp + checkpoints..."
 
 rm -rf /tmp/spark-*
 
-# Restart HDFS briefly to delete checkpoint dir
+# Remove HDFS checkpoint dir safely
 start-dfs.sh > /dev/null 2>&1
-sleep 10
+sleep 8
 hdfs dfsadmin -safemode leave > /dev/null 2>&1 || true
 hdfs dfs -rm -r -f /user/ankit/spark-checkpoints 2>/dev/null || true
 stop-dfs.sh > /dev/null 2>&1
 
 # ── 5. Clean application logs ───────────────────────────
 echo ""
-echo "5️⃣  Cleaning application logs…"
+echo "5️⃣ Cleaning application logs..."
 
-rm -f ~/bigdata-project/logs/*.log
+rm -rf ~/bigdata-project/logs/*
+mkdir -p ~/bigdata-project/logs
 
 echo ""
 echo "====================================="
 echo "✅ FULL RESET COMPLETE"
 echo "====================================="
-=======
-
-echo "Stopping services..."
-
-stop-hbase.sh
-stop-yarn.sh
-stop-dfs.sh
-
-pkill -f kafka
-pkill -f zookeeper
-pkill -f SparkSubmit
-
-echo "Cleaning temp files..."
-
-rm -rf /tmp/zookeeper
-rm -rf ~/kafka-zk/kafka-logs/*
-rm -rf ~/spark-checkpoints
-
-mkdir -p ~/kafka-zk/kafka-logs
-
-echo "Reset complete."
->>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3

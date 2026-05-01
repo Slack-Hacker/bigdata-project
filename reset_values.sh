@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #!/bin/bash
 # ─────────────────────────────────────────────────────────
 # reset_values.sh  —  Reset pipeline data safely
@@ -59,13 +58,3 @@ echo ""
 echo "====================================="
 echo "✅ RESET COMPLETE"
 echo "====================================="
-=======
-echo "clearing website logs"
-rm -rf ~/website-traffic-monitoring-system/website.log
-
-echo "clearing kafka_logs"
-rm -rf ~/kafka-zk/kafka_logs
-
-echo "clearing spark-checkpoints...."
-hdfs dfs -rm -r /user/ankit/spark-checkpoints
->>>>>>> 3e8e9d96940598f46741697fb7af1a50fd08e4b3
