@@ -1,0 +1,14 @@
+{
+  "name": "website-traffic-monitor",
+  "version": "1.0.0",
+  "description": "Simple website with terminal logging for visitor tracking",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "hbase": "^0.6.1",
+    "kafkajs": "^2.2.4"
+  }
+}

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website Traffic Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0f1117;
+      --surface:  #1a1d27;
+      --border:   #2a2d3d;
+      --accent1:  #6c63ff;
+      --accent2:  #00d9a0;
+      --accent3:  #ff6b6b;
+      --accent4:  #ffd93d;
+      --text:     #e2e8f0;
+      --muted:    #8892a4;
+      --radius:   12px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    #status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: background .3s;
+    }
+    #status-dot.live { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+
+    /* ── Layout ── */
+    main { padding: 24px 28px; max-width: 1400px; margin: auto; }
+
+    /* ── KPI Cards ── */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s;
+    }
+    .kpi-card:hover { transform: translateY(-2px); }
+
+    .kpi-card .label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .kpi-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .kpi-card .sub {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      border-radius: var(--radius) 0 0 var(--radius);
+    }
+
+    .kpi-card.c1::before { background: var(--accent1); }
+    .kpi-card.c2::before { background: var(--accent2); }
+    .kpi-card.c3::before { background: var(--accent3); }
+    .kpi-card.c4::before { background: var(--accent4); }
+
+    /* ── Charts row ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) { .charts-row { grid-template-columns: 1fr; } }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .chart-card h3 {
+      font-size: .85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .chart-wrapper { position: relative; height: 260px; }
+
+    /* ── Log Table ── */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .table-card h3 {
+      font-size: .85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .table-scroll { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .82rem;
+    }
+
+    thead th {
+      background: #12141e;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .5px;
+      font-size: .72rem;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    tbody tr:hover { background: rgba(255,255,255,.03); }
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody td {
+      padding: 10px 14px;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .4px;
+    }
+    .badge-visit   { background: rgba(108,99,255,.2); color: #a59dff; }
+    .badge-click   { background: rgba(0,217,160,.2);  color: #00d9a0; }
+    .badge-scroll  { background: rgba(255,107,107,.2);color: #ff6b6b; }
+    .badge-default { background: rgba(255,255,255,.1); color: var(--muted); }
+
+    .page-tag {
+      background: rgba(255,255,255,.07);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: monospace;
+      font-size: .78rem;
+    }
+
+    .count-pill {
+      background: rgba(108,99,255,.15);
+      color: var(--accent1);
+      border-radius: 20px;
+      padding: 1px 9px;
+      font-weight: 700;
+      font-size: .8rem;
+    }
+
+    /* ── Skeleton / empty ── */
+    .empty-row td {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px;
+    }
+
+    /* ── Refresh indicator ── */
+    #last-updated {
+      font-size: .72rem;
+      color: var(--muted);
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📊 Real-Time Website Analytics</h1>
+  <div id="status-badge">
+    <div id="status-dot"></div>
+    <span id="last-updated">Connecting…</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- KPI Cards -->
+  <div class="kpi-row">
+    <div class="kpi-card c1">
+      <div class="label">Total Visits</div>
+      <div class="value" id="kpi-total">—</div>
+      <div class="sub">Cumulative page hits</div>
+    </div>
+    <div class="kpi-card c2">
+      <div class="label">Unique Pages</div>
+      <div class="value" id="kpi-pages">—</div>
+      <div class="sub">Distinct URLs tracked</div>
+    </div>
+    <div class="kpi-card c3">
+      <div class="label">Action Types</div>
+      <div class="value" id="kpi-actions">—</div>
+      <div class="sub">visit / click / scroll…</div>
+    </div>
+    <div class="kpi-card c4">
+      <div class="label">Unique Agents</div>
+      <div class="value" id="kpi-agents">—</div>
+      <div class="sub">Distinct user agents</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <h3>Page Traffic Distribution</h3>
+      <div class="chart-wrapper">
+        <canvas id="pageChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Action Breakdown</h3>
+      <div class="chart-wrapper">
+        <canvas id="actionChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log Table -->
+  <div class="table-card">
+    <h3>Recent Traffic Logs</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Page</th>
+            <th>Action</th>
+            <th>IP Address</th>
+            <th>User Agent</th>
+            <th>Hits</th>
+          </tr>
+        </thead>
+        <tbody id="log-body">
+          <tr class="empty-row"><td colspan="6">Waiting for data…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  /* ── Chart palette ── */
+  const PALETTE = [
+    '#6c63ff','#00d9a0','#ff6b6b','#ffd93d',
+    '#4fc3f7','#ff8a65','#a5d6a7','#ce93d8',
+    '#80cbc4','#f48fb1'
+  ];
+
+  let pageChart   = null;
+  let actionChart = null;
+
+  /* ── Chart factory ── */
+  function makeBar(ctx, labels, values) {
+    return new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Visits',
+          data: values,
+          backgroundColor: PALETTE,
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y + ' hits' } }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#8892a4', maxRotation: 30 },
+            grid:  { color: '#2a2d3d' }
+          },
+          y: {
+            ticks: { color: '#8892a4' },
+            grid:  { color: '#2a2d3d' },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  function makeDoughnut(ctx, labels, values) {
+    return new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          backgroundColor: PALETTE,
+          borderWidth: 2,
+          borderColor: '#1a1d27',
+          hoverOffset: 6,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: '#e2e8f0', padding: 14, font: { size: 12 } }
+          }
+        }
+      }
+    });
+  }
+
+  /* ── Update charts ── */
+  function updatePageChart(pages) {
+    const labels = Object.keys(pages);
+    const values = Object.values(pages);
+    const ctx    = document.getElementById('pageChart').getContext('2d');
+
+    if (pageChart) {
+      pageChart.data.labels             = labels;
+      pageChart.data.datasets[0].data   = values;
+      pageChart.update('active');
+    } else {
+      pageChart = makeBar(ctx, labels, values);
+    }
+  }
+
+  function updateActionChart(actions) {
+    const labels = Object.keys(actions);
+    const values = Object.values(actions);
+    const ctx    = document.getElementById('actionChart').getContext('2d');
+
+    if (actionChart) {
+      actionChart.data.labels           = labels;
+      actionChart.data.datasets[0].data = values;
+      actionChart.update('active');
+    } else {
+      actionChart = makeDoughnut(ctx, labels, values);
+    }
+  }
+
+  /* ── Action badge ── */
+  function badgeFor(action) {
+    const a = (action || '').toLowerCase();
+    if (a === 'visit')  return 'badge-visit';
+    if (a === 'click')  return 'badge-click';
+    if (a === 'scroll') return 'badge-scroll';
+    return 'badge-default';
+  }
+
+  /* ── Render logs ── */
+  function renderLogs(logs) {
+    const tbody = document.getElementById('log-body');
+    if (!logs || logs.length === 0) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No traffic data yet…</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = [...logs].reverse().map(l => `
+      <tr>
+        <td>${l.timestamp || '—'}</td>
+        <td><span class="page-tag">${l.page || '/'}</span></td>
+        <td><span class="badge ${badgeFor(l.action)}">${l.action || 'visit'}</span></td>
+        <td>${l.ip || '—'}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#8892a4"
+            title="${l.user_agent || ''}">${l.user_agent || '—'}</td>
+        <td><span class="count-pill">${l.count ?? 0}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  /* ── Main poll loop ── */
+  async function loadStats() {
+    const dot    = document.getElementById('status-dot');
+    const upd    = document.getElementById('last-updated');
+
+    try {
+      const res  = await fetch('/stats');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      /* KPI */
+      document.getElementById('kpi-total').textContent   = (data.total_visits   || 0).toLocaleString();
+      document.getElementById('kpi-pages').textContent   = Object.keys(data.pages   || {}).length;
+      document.getElementById('kpi-actions').textContent = Object.keys(data.actions || {}).length;
+      document.getElementById('kpi-agents').textContent  = Object.keys(data.users   || {}).length;
+
+      /* Charts */
+      if (data.pages   && Object.keys(data.pages).length)   updatePageChart(data.pages);
+      if (data.actions && Object.keys(data.actions).length) updateActionChart(data.actions);
+
+      /* Logs */
+      renderLogs(data.logs);
+
+      /* Status */
+      dot.className    = 'live';
+      upd.textContent  = 'Live · ' + new Date().toLocaleTimeString();
+
+    } catch (err) {
+      dot.className   = '';
+      upd.textContent = 'Error · ' + new Date().toLocaleTimeString();
+      console.warn('[Dashboard]', err);
+    }
+  }
+
+  /* boot */
+  loadStats();
+  setInterval(loadStats, 3000);
+</script>
+
+</body>
+</html>
