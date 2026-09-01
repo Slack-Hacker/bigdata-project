@@ -1,4 +1,4 @@
-﻿# 🌐 Real-Time Website Traffic Monitoring System
+# 🌐 Real-Time Website Traffic Monitoring System
 
 A end-to-end big data pipeline that captures, streams, processes, and visualises website visitor events in real time — built entirely on open-source distributed technologies.
 
@@ -32,67 +32,67 @@ A end-to-end big data pipeline that captures, streams, processes, and visualises
 This project implements a **real-time clickstream analytics pipeline** for a multi-page website. Every page visit is captured, published to a Kafka topic, processed by a Spark Structured Streaming job, persisted to HBase, and finally rendered on a live-updating analytics dashboard.
 
 **Key capabilities:**
-- Sub-minute latency from browser visit ΓåÆ dashboard metric update
+- Sub-minute latency from browser visit → dashboard metric update
 - Stateful session tracking (active users, unique visitors)
 - Page-level traffic distribution with action breakdown
 - Horizontally scalable — add HDFS datanodes or Spark workers without code changes
 
 ---
 
-## 🏗️∩╕Å Architecture
+## 🏗️ Architecture
 
 ```
-ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
-Γöé                          USER'S BROWSER                              Γöé
-ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
-                                Γöé  HTTP visit
-                                Γû╝
-ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
-Γöé               Node.js / Express  (port 3001)                         Γöé
-Γöé   ΓÇó Serves static HTML pages (/, /about, /contact)                   Γöé
-Γöé   ΓÇó Tracking middleware — captures IP, User-Agent, page, timestamp   Γöé
-Γöé   ΓÇó In-memory session store with 15 s timeout                        Γöé
-Γöé   ΓÇó KafkaJS producer ΓåÆ publishes JSON events to `website_logs`       Γöé
-ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
-                                Γöé  Kafka message
-                                Γû╝
-ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
-Γöé              Apache Kafka  (broker: master:9092)                     Γöé
-Γöé   ΓÇó Topic: website_logs                                              Γöé
-Γöé   ΓÇó Durable, ordered log of all traffic events                       Γöé
-ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
-                                Γöé  readStream
-                                Γû╝
-ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
-Γöé       Apache Spark Structured Streaming  (spark://master:7077)       Γöé
-Γöé   ΓÇó Parses JSON events (ip, user_agent, page, action, timestamp)     Γöé
-Γöé   ΓÇó Groups by page — counts hits, retains latest metadata            Γöé
-Γöé   ΓÇó 15-second micro-batch trigger                                    Γöé
-Γöé   ΓÇó foreachBatch writes to HBase via Happybase (Thrift API)          Γöé
-Γöé   ΓÇó POSTs aggregated batch to Flask /update endpoint                 Γöé
-Γöé   ΓÇó Checkpoints on HDFS: hdfs://master:9000/user/ankit/spark-...    Γöé
-ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
-                                Γöé  Thrift write
-                                Γû╝
-ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
-Γöé             Apache HBase  (master:16010 / Thrift: 9090)              Γöé
-Γöé   ΓÇó Table: web_traffic                                               Γöé
-Γöé   ΓÇó Row key: page URL                                                Γöé
-Γöé   ΓÇó Column family cf: { timestamp, page, user_agent,                 Γöé
-Γöé                         count, ip, action }                          Γöé
-ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
-                                Γöé  HBase scan
-                                Γû╝
-ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
-Γöé              Flask Dashboard  (port 5000)                            Γöé
-Γöé   ΓÇó GET /stats  — reads HBase, returns JSON metrics                  Γöé
-Γöé   ΓÇó POST /update — receives push from Spark batch                    Γöé
-Γöé   ΓÇó Renders dark-theme analytics UI (Chart.js)                       Γöé
-Γöé     ┬╖ KPI cards: total visits, unique pages, action types, agents    Γöé
-Γöé     ┬╖ Bar chart: page traffic distribution                           Γöé
-Γöé     ┬╖ Doughnut: action breakdown                                     Γöé
-Γöé     ┬╖ Live log table: last 20 events, auto-refresh every 3 s        Γöé
-ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+┌──────────────────────────────────────────────────────────────────────┐
+│                          USER'S BROWSER                              │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │  HTTP visit
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│               Node.js / Express  (port 3001)                         │
+│   • Serves static HTML pages (/, /about, /contact)                   │
+│   • Tracking middleware — captures IP, User-Agent, page, timestamp   │
+│   • In-memory session store with 15 s timeout                        │
+│   • KafkaJS producer → publishes JSON events to `website_logs`       │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │  Kafka message
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│              Apache Kafka  (broker: master:9092)                     │
+│   • Topic: website_logs                                              │
+│   • Durable, ordered log of all traffic events                       │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │  readStream
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│       Apache Spark Structured Streaming  (spark://master:7077)       │
+│   • Parses JSON events (ip, user_agent, page, action, timestamp)     │
+│   • Groups by page — counts hits, retains latest metadata            │
+│   • 15-second micro-batch trigger                                    │
+│   • foreachBatch writes to HBase via Happybase (Thrift API)          │
+│   • POSTs aggregated batch to Flask /update endpoint                 │
+│   • Checkpoints on HDFS: hdfs://master:9000/user/ankit/spark-...    │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │  Thrift write
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│             Apache HBase  (master:16010 / Thrift: 9090)              │
+│   • Table: web_traffic                                               │
+│   • Row key: page URL                                                │
+│   • Column family cf: { timestamp, page, user_agent,                 │
+│                         count, ip, action }                          │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │  HBase scan
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│              Flask Dashboard  (port 5000)                            │
+│   • GET /stats  — reads HBase, returns JSON metrics                  │
+│   • POST /update — receives push from Spark batch                    │
+│   • Renders dark-theme analytics UI (Chart.js)                       │
+│     · KPI cards: total visits, unique pages, action types, agents    │
+│     · Bar chart: page traffic distribution                           │
+│     · Doughnut: action breakdown                                     │
+│     · Live log table: last 20 events, auto-refresh every 3 s        │
+└──────────────────────────────────────────────────────────────────────┘
 
 Underlying storage layer — Apache Hadoop HDFS (3 nodes, replication 2)
 Resource management   — Apache YARN (2 active nodes, 8 GB / 16 vCores)
@@ -100,7 +100,7 @@ Resource management   — Apache YARN (2 active nodes, 8 GB / 16 vCores)
 
 ---
 
-## ≡ƒ¢á∩╕Å Tech Stack
+## 🛠️ Tech Stack
 
 | Layer | Technology | Version | Role |
 |---|---|---|---|
@@ -111,7 +111,7 @@ Resource management   — Apache YARN (2 active nodes, 8 GB / 16 vCores)
 | **Distributed FS** | Apache Hadoop HDFS | 3.3.6 | Spark checkpoints & block storage |
 | **Resource Manager** | Apache YARN | 3.3.6 | Cluster resource scheduling |
 | **Dashboard API** | Flask + Flask-CORS | 3.0 | REST API & server-side rendering |
-| **HBase Client** | Happybase | 1.3.0 | Python ΓåÆ HBase Thrift bridge |
+| **HBase Client** | Happybase | 1.3.0 | Python → HBase Thrift bridge |
 | **Python Kafka** | kafka-python | 2.3.0 | Python producer (backend.py) |
 
 ---
@@ -120,61 +120,61 @@ Resource management   — Apache YARN (2 active nodes, 8 GB / 16 vCores)
 
 ```
 bigdata-project/
-Γöé
-Γö£ΓöÇΓöÇ spark/
-Γöé   ΓööΓöÇΓöÇ kafka_to_hbase_stream.py     # Spark Structured Streaming job
-Γöé
-Γö£ΓöÇΓöÇ dashboard/
-Γöé   Γö£ΓöÇΓöÇ dashboard_server.py          # Flask API (/stats, /update, /)
-Γöé   ΓööΓöÇΓöÇ templates/
-Γöé       ΓööΓöÇΓöÇ dashboard.html           # Dark-theme Chart.js analytics UI
-Γöé
-Γö£ΓöÇΓöÇ website-traffic-monitoring-system/
-Γöé   Γö£ΓöÇΓöÇ server.js                    # Express server + KafkaJS producer
-Γöé   ΓööΓöÇΓöÇ public/
-Γöé       Γö£ΓöÇΓöÇ index.html               # Home page (tracked)
-Γöé       Γö£ΓöÇΓöÇ about.html               # About page (tracked)
-Γöé       Γö£ΓöÇΓöÇ contact.html             # Contact page (tracked)
-Γöé       Γö£ΓöÇΓöÇ script.js                # Client-side interactions
-Γöé       ΓööΓöÇΓöÇ style.css                # Site styling
-Γöé
-Γö£ΓöÇΓöÇ backend/
-Γöé   ΓööΓöÇΓöÇ backend.py                   # Flask REST API + Kafka producer (alt backend)
-Γöé
-Γö£ΓöÇΓöÇ config/
-Γöé   Γö£ΓöÇΓöÇ kafka_topic.sh               # Create `website_logs` Kafka topic
-Γöé   ΓööΓöÇΓöÇ create_hbase_table.sh        # Create `web_traffic` HBase table
-Γöé
-Γö£ΓöÇΓöÇ configs/                         # XML config templates
-Γöé   Γö£ΓöÇΓöÇ core-site.xml.template
-Γöé   Γö£ΓöÇΓöÇ hdfs-site.xml.template
-Γöé   ΓööΓöÇΓöÇ hbase-site.xml.template
-Γöé
-Γö£ΓöÇΓöÇ configs_xml/                     # Active XML configs
-Γöé   Γö£ΓöÇΓöÇ core-site.xml
-Γöé   Γö£ΓöÇΓöÇ hdfs-site.xml
-Γöé   ΓööΓöÇΓöÇ hbase-site.xml
-Γöé
-Γö£ΓöÇΓöÇ run_project.sh                   # 🚀 One-shot: start all services
-Γö£ΓöÇΓöÇ stop_cluster.sh                  # ≡ƒ¢æ Graceful shutdown
-Γö£ΓöÇΓöÇ reset_cluster.sh                 # ≡ƒöä Full reset (data + logs + checkpoints)
-Γö£ΓöÇΓöÇ reset_values.sh                  # ≡ƒùæ∩╕Å  Clear live data only (HBase + checkpoints)
-Γö£ΓöÇΓöÇ health_check.sh                  # 🔍 Verify all services are running
-Γö£ΓöÇΓöÇ ports.sh                         # 🌐 Print all service URLs
-Γö£ΓöÇΓöÇ kafka.sh                         # Restart Kafka only
-Γö£ΓöÇΓöÇ stream.sh                        # Start Spark streaming job only
-Γö£ΓöÇΓöÇ start_streaming.sh               # Start streaming with env pre-check
-Γö£ΓöÇΓöÇ start_cluster.sh                 # Start Hadoop + ZK + Kafka + HBase only
-Γö£ΓöÇΓöÇ requirements.txt                 # Python dependencies
-ΓööΓöÇΓöÇ logs/                            # Created at runtime
-    Γö£ΓöÇΓöÇ spark.log
-    Γö£ΓöÇΓöÇ dashboard.log
-    ΓööΓöÇΓöÇ website.log
+│
+├── spark/
+│   └── kafka_to_hbase_stream.py     # Spark Structured Streaming job
+│
+├── dashboard/
+│   ├── dashboard_server.py          # Flask API (/stats, /update, /)
+│   └── templates/
+│       └── dashboard.html           # Dark-theme Chart.js analytics UI
+│
+├── website-traffic-monitoring-system/
+│   ├── server.js                    # Express server + KafkaJS producer
+│   └── public/
+│       ├── index.html               # Home page (tracked)
+│       ├── about.html               # About page (tracked)
+│       ├── contact.html             # Contact page (tracked)
+│       ├── script.js                # Client-side interactions
+│       └── style.css                # Site styling
+│
+├── backend/
+│   └── backend.py                   # Flask REST API + Kafka producer (alt backend)
+│
+├── config/
+│   ├── kafka_topic.sh               # Create `website_logs` Kafka topic
+│   └── create_hbase_table.sh        # Create `web_traffic` HBase table
+│
+├── configs/                         # XML config templates
+│   ├── core-site.xml.template
+│   ├── hdfs-site.xml.template
+│   └── hbase-site.xml.template
+│
+├── configs_xml/                     # Active XML configs
+│   ├── core-site.xml
+│   ├── hdfs-site.xml
+│   └── hbase-site.xml
+│
+├── run_project.sh                   # 🚀 One-shot: start all services
+├── stop_cluster.sh                  # 🛑 Graceful shutdown
+├── reset_cluster.sh                 # 🔄 Full reset (data + logs + checkpoints)
+├── reset_values.sh                  # 🗑️  Clear live data only (HBase + checkpoints)
+├── health_check.sh                  # 🔍 Verify all services are running
+├── ports.sh                         # 🌐 Print all service URLs
+├── kafka.sh                         # Restart Kafka only
+├── stream.sh                        # Start Spark streaming job only
+├── start_streaming.sh               # Start streaming with env pre-check
+├── start_cluster.sh                 # Start Hadoop + ZK + Kafka + HBase only
+├── requirements.txt                 # Python dependencies
+└── logs/                            # Created at runtime
+    ├── spark.log
+    ├── dashboard.log
+    └── website.log
 ```
 
 ---
 
-## Γ£à Prerequisites
+## ✅ Prerequisites
 
 Make sure the following are **installed and configured** on your cluster before running the project:
 
@@ -205,7 +205,7 @@ npm install
 
 ---
 
-## ΓÜÖ∩╕Å Setup & Configuration
+## ⚙️ Setup & Configuration
 
 ### 1. Hadoop configuration
 
@@ -278,12 +278,12 @@ Once `run_project.sh` completes, all services are accessible at:
 | Service | URL | Purpose |
 |---|---|---|
 | 🌐 Website | `http://master:3001` | Tracked web pages |
-| ≡ƒôè Analytics Dashboard | `http://master:5000` | Real-time traffic visualisation |
-| ΓÜí Spark Master UI | `http://master:8080` | Worker status, running apps |
-| ≡ƒôê Spark App UI | `http://master:4040` | Job / stage / task detail |
-| ≡ƒùä∩╕Å HDFS NameNode UI | `http://master:9870` | File system health & blocks |
-| ≡ƒÄ¢∩╕Å YARN ResourceManager | `http://master:8088` | Application & node metrics |
-| ≡ƒÅá HBase Master UI | `http://master:16010` | Region servers & table info |
+| 📊 Analytics Dashboard | `http://master:5000` | Real-time traffic visualisation |
+| ⚡ Spark Master UI | `http://master:8080` | Worker status, running apps |
+| 📈 Spark App UI | `http://master:4040` | Job / stage / task detail |
+| 🗄️ HDFS NameNode UI | `http://master:9870` | File system health & blocks |
+| 🎛️ YARN ResourceManager | `http://master:8088` | Application & node metrics |
+| 🏠 HBase Master UI | `http://master:16010` | Region servers & table info |
 
 ---
 
@@ -292,7 +292,7 @@ Once `run_project.sh` completes, all services are accessible at:
 | Script | Description |
 |---|---|
 | `run_project.sh` | **One-shot startup** — launches every service in the correct order |
-| `stop_cluster.sh` | Gracefully stop all services (website ΓåÆ dashboard ΓåÆ Spark ΓåÆ HBase ΓåÆ Kafka ΓåÆ ZK ΓåÆ Hadoop) |
+| `stop_cluster.sh` | Gracefully stop all services (website → dashboard → Spark → HBase → Kafka → ZK → Hadoop) |
 | `start_cluster.sh` | Start infrastructure only (Hadoop + ZK + Kafka + HBase), without Spark or the app |
 | `start_streaming.sh` | Start the Spark streaming job only (services must already be running) |
 | `stream.sh` | Minimal Spark submit wrapper |
@@ -390,13 +390,12 @@ This allows the job to recover from failures without reprocessing old data.
 
 ---
 
-## ≡ƒñ¥ Contributing
+## 🤝 Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ---
 
-## ≡ƒôä License
+## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
-
