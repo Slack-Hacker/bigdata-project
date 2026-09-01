@@ -1,22 +1,48 @@
-# 📊 Real-Time Website Traffic Analytics System
+# 📊 Real-Time Website Traffic Monitoring System
 
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Apache Spark](https://img.shields.io/badge/Apache_Spark-Streaming-E25A1C.svg)](https://spark.apache.org/)
-[![Apache Kafka](https://img.shields.io/badge/Apache_Kafka-Event_Streams-231F20.svg)](https://kafka.apache.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933.svg)](https://nodejs.org/)
+[![Apache Kafka](https://img.shields.io/badge/Apache_Kafka-3.x-231F20.svg)](https://kafka.apache.org/)
+[![Apache Spark](https://img.shields.io/badge/Apache_Spark-3.x-E25A1C.svg)](https://spark.apache.org/)
+[![Apache HBase](https://img.shields.io/badge/Apache_HBase-2.x-000000.svg)](https://hbase.apache.org/)
+[![Hadoop HDFS](https://img.shields.io/badge/Hadoop-HDFS_YARN-66CCFF.svg)](https://hadoop.apache.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0-000000.svg)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A enterprise-grade **Real-Time Distributed Traffic Monitoring & Big Data Analytics Platform** built with **Apache Spark Streaming**, **Apache Kafka**, **Python**, and interactive web dashboards.
-
-The platform ingests high-throughput website event streams, processes real-time metrics (unique visitors, page views, geographic distribution, bounce rates), and visualizes live analytics on dynamic dashboards.
+An enterprise-grade, distributed **Real-Time Website Traffic Monitoring System** built with **Node.js**, **Apache Kafka**, **Spark Structured Streaming**, **Apache HBase**, **Hadoop HDFS**, and **Flask**.
 
 ---
 
-## 🌟 Key Capabilities
+## 🌟 Key Resume Highlights & Technical Features
 
-- **⚡ High-Throughput Event Ingestion**: Ingests live web telemetry event streams using Apache Kafka topics.
-- **🔥 Distributed Real-Time Processing**: Computes streaming aggregations, windowed metrics, and anomaly detection using Apache Spark Structured Streaming.
-- **📈 Interactive Live Dashboard**: Web-based monitoring frontend for visualizing active user sessions, top requested URLs, traffic spikes, and server health.
-- **🛠️ Automated Cluster Lifecycle Scripts**: One-click cluster initialization, streaming startup, health checks, and shutdown scripts (`start_cluster.sh`, `start_streaming.sh`, `health_check.sh`).
+- **⚡ Clickstream Data Pipeline**: Built a real-time clickstream processing pipeline using **Node.js**, **Kafka**, **Spark Structured Streaming**, **HBase**, and **HDFS**.
+- **📡 Kafka Event Ingestion**: Streamed page, action, timestamp, IP address, and user-agent events through **Apache Kafka** topics for real-time streaming processing.
+- **⏱️ Spark Micro-Batch Processing**: Implemented **15-second Spark micro-batch aggregation** windows to process traffic throughput and active user metrics.
+- **💾 Fault-Tolerant Storage**: Stored aggregated events in **Apache HBase** with **HDFS checkpoints** to enable stateful recovery and fault tolerance.
+- **📈 Live Analytics Dashboard**: Developed a **Flask + Chart.js** web dashboard rendering live website traffic metrics, concurrent active users, and event analytics.
+- **🌐 Distributed Cluster Infrastructure**: Configured a multi-node distributed cluster running **Hadoop HDFS**, **YARN**, **Apache Kafka**, **Spark**, and **HBase**.
+
+---
+
+## 🏗️ System Architecture
+
+```
+ ┌───────────────────┐    Kafka Event Producer     ┌───────────────────┐
+ │ Node.js Web Server│ ──────────────────────────> │ Apache Kafka      │
+ │ Clickstream Events│                             │ Ingestion Topics  │
+ └───────────────────┘                             └─────────┬─────────┘
+                                                             │
+                                                             ▼
+ ┌───────────────────┐    15s Micro-Batches        ┌───────────────────┐
+ │ Flask Analytics   │ <────────────────────────── │ Spark Structured  │
+ │ Live Dashboard    │                             │ Streaming Engine  │
+ └───────────────────┘                             └─────────┬─────────┘
+                                                             │
+                                                             ▼
+                                                   ┌───────────────────┐
+                                                   │ Apache HBase      │
+                                                   │ + HDFS Checkpoints│
+                                                   └───────────────────┘
+```
 
 ---
 
@@ -24,52 +50,12 @@ The platform ingests high-throughput website event streams, processes real-time 
 
 ```
 Real-Time-Website-traffic-Analysis/
-├── spark/                # Apache Spark Structured Streaming jobs & aggregation pipelines
-├── config/ & configs/    # Kafka brokers, Zookeeper & Spark cluster configurations
-├── backend/              # Python API backend for serving streaming analytics metrics
-├── dashboard/            # Web analytics dashboard user interface
-├── screenshots/          # Platform preview screenshots
-├── start_cluster.sh      # Cluster startup & services launcher
-├── start_streaming.sh    # Launches Spark streaming streaming jobs
-├── health_check.sh       # System status & port monitoring script
-├── requirements.txt      # Python dependencies
-└── README.md             # Project documentation
-```
-
----
-
-## 🚀 Quick Start & Deployment
-
-### Prerequisites
-
-- Apache Kafka & Zookeeper
-- Apache Spark 3.x
-- Python 3.9+
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/Slack-Hacker/Real-Time-Website-traffic-Analysis.git
-cd Real-Time-Website-traffic-Analysis
-```
-
-### 2. Install Python Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Launch Cluster & Streaming Pipeline
-
-```bash
-# 1. Start Zookeeper & Kafka brokers
-./start_cluster.sh
-
-# 2. Launch Spark Structured Streaming pipeline
-./start_streaming.sh
-
-# 3. Verify health status
-./health_check.sh
+├── producer/                 # Node.js clickstream event producer & simulator
+├── streaming/                # PySpark / Scala Spark Structured Streaming jobs
+├── storage/                  # Apache HBase schema scripts & HDFS configurations
+├── dashboard/                # Flask web server & Chart.js live monitoring dashboard
+├── cluster/                  # YARN, Hadoop, Kafka, and HBase cluster scripts
+└── README.md                 # Project documentation
 ```
 
 ---
