@@ -1,6 +1,6 @@
-﻿# ≡ƒîÉ Real-Time Website Traffic Monitoring System
+﻿# 🌐 Real-Time Website Traffic Monitoring System
 
-A end-to-end big data pipeline that captures, streams, processes, and visualises website visitor events in real time ΓÇö built entirely on open-source distributed technologies.
+A end-to-end big data pipeline that captures, streams, processes, and visualises website visitor events in real time — built entirely on open-source distributed technologies.
 
 [![Hadoop](https://img.shields.io/badge/Hadoop-3.3.6-yellow?logo=apachehadoop)](https://hadoop.apache.org/)
 [![Kafka](https://img.shields.io/badge/Kafka-3.x-black?logo=apachekafka)](https://kafka.apache.org/)
@@ -11,7 +11,7 @@ A end-to-end big data pipeline that captures, streams, processes, and visualises
 
 ---
 
-## ≡ƒôî Table of Contents
+## 📌 Table of Contents
 
 - [Overview](#-overview)
 - [Architecture](#-architecture)
@@ -27,7 +27,7 @@ A end-to-end big data pipeline that captures, streams, processes, and visualises
 
 ---
 
-## ≡ƒöì Overview
+## 🔍 Overview
 
 This project implements a **real-time clickstream analytics pipeline** for a multi-page website. Every page visit is captured, published to a Kafka topic, processed by a Spark Structured Streaming job, persisted to HBase, and finally rendered on a live-updating analytics dashboard.
 
@@ -35,11 +35,11 @@ This project implements a **real-time clickstream analytics pipeline** for a mul
 - Sub-minute latency from browser visit ΓåÆ dashboard metric update
 - Stateful session tracking (active users, unique visitors)
 - Page-level traffic distribution with action breakdown
-- Horizontally scalable ΓÇö add HDFS datanodes or Spark workers without code changes
+- Horizontally scalable — add HDFS datanodes or Spark workers without code changes
 
 ---
 
-## ≡ƒÅù∩╕Å Architecture
+## 🏗️∩╕Å Architecture
 
 ```
 ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
@@ -50,7 +50,7 @@ This project implements a **real-time clickstream analytics pipeline** for a mul
 ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
 Γöé               Node.js / Express  (port 3001)                         Γöé
 Γöé   ΓÇó Serves static HTML pages (/, /about, /contact)                   Γöé
-Γöé   ΓÇó Tracking middleware ΓÇö captures IP, User-Agent, page, timestamp   Γöé
+Γöé   ΓÇó Tracking middleware — captures IP, User-Agent, page, timestamp   Γöé
 Γöé   ΓÇó In-memory session store with 15 s timeout                        Γöé
 Γöé   ΓÇó KafkaJS producer ΓåÆ publishes JSON events to `website_logs`       Γöé
 ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
@@ -66,7 +66,7 @@ This project implements a **real-time clickstream analytics pipeline** for a mul
 ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
 Γöé       Apache Spark Structured Streaming  (spark://master:7077)       Γöé
 Γöé   ΓÇó Parses JSON events (ip, user_agent, page, action, timestamp)     Γöé
-Γöé   ΓÇó Groups by page ΓÇö counts hits, retains latest metadata            Γöé
+Γöé   ΓÇó Groups by page — counts hits, retains latest metadata            Γöé
 Γöé   ΓÇó 15-second micro-batch trigger                                    Γöé
 Γöé   ΓÇó foreachBatch writes to HBase via Happybase (Thrift API)          Γöé
 Γöé   ΓÇó POSTs aggregated batch to Flask /update endpoint                 Γöé
@@ -85,8 +85,8 @@ This project implements a **real-time clickstream analytics pipeline** for a mul
                                 Γû╝
 ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
 Γöé              Flask Dashboard  (port 5000)                            Γöé
-Γöé   ΓÇó GET /stats  ΓÇö reads HBase, returns JSON metrics                  Γöé
-Γöé   ΓÇó POST /update ΓÇö receives push from Spark batch                    Γöé
+Γöé   ΓÇó GET /stats  — reads HBase, returns JSON metrics                  Γöé
+Γöé   ΓÇó POST /update — receives push from Spark batch                    Γöé
 Γöé   ΓÇó Renders dark-theme analytics UI (Chart.js)                       Γöé
 Γöé     ┬╖ KPI cards: total visits, unique pages, action types, agents    Γöé
 Γöé     ┬╖ Bar chart: page traffic distribution                           Γöé
@@ -94,8 +94,8 @@ This project implements a **real-time clickstream analytics pipeline** for a mul
 Γöé     ┬╖ Live log table: last 20 events, auto-refresh every 3 s        Γöé
 ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
 
-Underlying storage layer ΓÇö Apache Hadoop HDFS (3 nodes, replication 2)
-Resource management   ΓÇö Apache YARN (2 active nodes, 8 GB / 16 vCores)
+Underlying storage layer — Apache Hadoop HDFS (3 nodes, replication 2)
+Resource management   — Apache YARN (2 active nodes, 8 GB / 16 vCores)
 ```
 
 ---
@@ -116,7 +116,7 @@ Resource management   ΓÇö Apache YARN (2 active nodes, 8 GB / 16 vCores)
 
 ---
 
-## ≡ƒôé Project Structure
+## 📂 Project Structure
 
 ```
 bigdata-project/
@@ -155,12 +155,12 @@ bigdata-project/
 Γöé   Γö£ΓöÇΓöÇ hdfs-site.xml
 Γöé   ΓööΓöÇΓöÇ hbase-site.xml
 Γöé
-Γö£ΓöÇΓöÇ run_project.sh                   # ≡ƒÜÇ One-shot: start all services
+Γö£ΓöÇΓöÇ run_project.sh                   # 🚀 One-shot: start all services
 Γö£ΓöÇΓöÇ stop_cluster.sh                  # ≡ƒ¢æ Graceful shutdown
 Γö£ΓöÇΓöÇ reset_cluster.sh                 # ≡ƒöä Full reset (data + logs + checkpoints)
 Γö£ΓöÇΓöÇ reset_values.sh                  # ≡ƒùæ∩╕Å  Clear live data only (HBase + checkpoints)
-Γö£ΓöÇΓöÇ health_check.sh                  # ≡ƒöì Verify all services are running
-Γö£ΓöÇΓöÇ ports.sh                         # ≡ƒîÉ Print all service URLs
+Γö£ΓöÇΓöÇ health_check.sh                  # 🔍 Verify all services are running
+Γö£ΓöÇΓöÇ ports.sh                         # 🌐 Print all service URLs
 Γö£ΓöÇΓöÇ kafka.sh                         # Restart Kafka only
 Γö£ΓöÇΓöÇ stream.sh                        # Start Spark streaming job only
 Γö£ΓöÇΓöÇ start_streaming.sh               # Start streaming with env pre-check
@@ -209,7 +209,7 @@ npm install
 
 ### 1. Hadoop configuration
 
-Edit `configs_xml/core-site.xml` ΓÇö set your NameNode address:
+Edit `configs_xml/core-site.xml` — set your NameNode address:
 
 ```xml
 <configuration>
@@ -241,7 +241,7 @@ Replace `master` with your master node's hostname or IP in all files above.
 
 ---
 
-## ≡ƒÜÇ Quick Start
+## 🚀 Quick Start
 
 ```bash
 # Clone the repository
@@ -271,13 +271,13 @@ bash run_project.sh
 
 ---
 
-## ≡ƒîÉ Service URLs
+## 🌐 Service URLs
 
 Once `run_project.sh` completes, all services are accessible at:
 
 | Service | URL | Purpose |
 |---|---|---|
-| ≡ƒîÉ Website | `http://master:3001` | Tracked web pages |
+| 🌐 Website | `http://master:3001` | Tracked web pages |
 | ≡ƒôè Analytics Dashboard | `http://master:5000` | Real-time traffic visualisation |
 | ΓÜí Spark Master UI | `http://master:8080` | Worker status, running apps |
 | ≡ƒôê Spark App UI | `http://master:4040` | Job / stage / task detail |
@@ -287,11 +287,11 @@ Once `run_project.sh` completes, all services are accessible at:
 
 ---
 
-## ≡ƒô£ Scripts Reference
+## 📜 Scripts Reference
 
 | Script | Description |
 |---|---|
-| `run_project.sh` | **One-shot startup** ΓÇö launches every service in the correct order |
+| `run_project.sh` | **One-shot startup** — launches every service in the correct order |
 | `stop_cluster.sh` | Gracefully stop all services (website ΓåÆ dashboard ΓåÆ Spark ΓåÆ HBase ΓåÆ Kafka ΓåÆ ZK ΓåÆ Hadoop) |
 | `start_cluster.sh` | Start infrastructure only (Hadoop + ZK + Kafka + HBase), without Spark or the app |
 | `start_streaming.sh` | Start the Spark streaming job only (services must already be running) |
@@ -304,21 +304,21 @@ Once `run_project.sh` completes, all services are accessible at:
 
 ---
 
-## ≡ƒô╕ Screenshots
+## 📸 Screenshots
 
-### HDFS NameNode ΓÇö Overview
+### HDFS NameNode — Overview
 ![HDFS NameNode Overview](screenshots/01_hdfs_overview.png)
 > Hadoop 3.3.6 running on `master:9000`. HDFS reports 281 files/directories across 202 blocks, with 1.31 GB DFS used and 7.64 GB remaining.
 
 ---
 
-### HDFS NameNode ΓÇö Datanodes
+### HDFS NameNode — Datanodes
 ![HDFS Datanodes](screenshots/02_hdfs_datanodes.png)
 > Two datanodes (`worker1` and `worker3`) are in service, each storing ~200 blocks with 19 GB capacity at ~3% disk utilisation.
 
 ---
 
-### YARN ResourceManager ΓÇö Cluster
+### YARN ResourceManager — Cluster
 ![YARN Cluster](screenshots/03_yarn_cluster.png)
 > YARN shows 2 active nodes with 8 GB RAM and 16 vCores available. The Capacity Scheduler is configured for fair resource sharing.
 
@@ -342,7 +342,7 @@ Once `run_project.sh` completes, all services are accessible at:
 
 ---
 
-### Website ΓÇö Tracked Pages
+### Website — Tracked Pages
 ![Website](screenshots/07_website.png)
 > The Node.js Express server serves the tracked multi-page website. Every visit is transparently captured and pushed to the Kafka `website_logs` topic.
 
@@ -354,7 +354,7 @@ Once `run_project.sh` completes, all services are accessible at:
 
 ---
 
-## ≡ƒö¼ How It Works
+## 🔬 How It Works
 
 ### Event Flow
 
